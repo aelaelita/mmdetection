@@ -160,7 +160,7 @@ class CustomDataset(Dataset):
                  metric='mAP',
                  logger=None,
                  proposal_nums=(100, 300, 1000),
-                 iou_thr=0.5,
+                 iou_thr=0.8,
                  scale_ranges=None):
         """Evaluate the dataset.
 

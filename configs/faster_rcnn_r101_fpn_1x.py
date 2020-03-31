@@ -106,6 +106,10 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+            type='MinIoURandomCrop',
+            min_ious=(0.1, 0.3, 0.5),
+            min_crop_size=0.3),
     dict(type='Resize', img_scale=(800, 600), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
@@ -126,11 +130,12 @@ test_pipeline = [
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
             dict(type='Collect', keys=['img']),
+
         ])
 ]
 data = dict(
-    imgs_per_gpu=4,
-    workers_per_gpu=4,
+    imgs_per_gpu=2,
+    workers_per_gpu=2,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'train.txt',
@@ -166,10 +171,10 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 10
+total_epochs = 20
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '/home/mmdetection/logs/faster_rcnn_r101_fpn_1x'
+work_dir = '/home/mmdetection/logs/faster_rcnn_r101_fpn_1x_aug'
 load_from = None
 resume_from = None  # "/content/drive/My Drive/DL/epoch_8.pth"
 workflow = [('train', 1)]
